@@ -1,15 +1,14 @@
 import os
 from transformers import pipeline
 import pandas as pd
-from constants import PICKLE_DIR
+from src.utils.constants import PICKLE_DIR
 
 
-def predict_sentiment():
+def predict_sentiment(messages_df):
     classifier = pipeline(
         "sentiment-analysis",
         model="distilbert-base-uncased-finetuned-sst-2-english"
     )
-    messages_df = pd.read_pickle(os.path.join(PICKLE_DIR, "parse.pkl"))
 
     messages = messages_df["message"].values.tolist()
     sentiments = classifier(messages)
@@ -27,6 +26,9 @@ def predict_sentiment():
     messages_df = messages_df.assign(score=sentiment_score)
     messages_df.to_pickle(os.path.join(PICKLE_DIR, "sentiment.pkl"))
 
+    return messages_df
+
 
 if __name__ == "__main__":
-    predict_sentiment()
+    messages_df = pd.read_pickle(os.path.join(PICKLE_DIR, "parse.pkl"))
+    predict_sentiment(messages_df)
