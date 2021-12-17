@@ -48,7 +48,7 @@ def parse_json_file(file_name: str):
     df = pd.DataFrame(list(zip(parsed_timestamps, parsed_messages)), columns=[
         "date", "message"])
     df["date"] = pd.to_datetime(df["date"])
-    df.to_pickle("test.pkl")
+    df.to_pickle("parse.pkl")
 
 
 if __name__ == "__main__":

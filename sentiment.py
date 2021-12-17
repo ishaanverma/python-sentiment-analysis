@@ -3,11 +3,11 @@ import pandas as pd
 
 
 def predict_sentiment():
-    classifier = pipeline("sentiment-analysis")
-    messages_df = pd.read_pickle("./test.pkl")
+    classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+    messages_df = pd.read_pickle("./parse.pkl")
 
     messages = messages_df["message"].values.tolist()
-    sentiments = classifier(messages, model="distilbert-base-uncased-finetuned-sst-2-english")
+    sentiments = classifier(messages)
 
     sentiment_labels = list(
         map(lambda item: 1 if item["label"] == "POSITIVE" else 0, sentiments))
