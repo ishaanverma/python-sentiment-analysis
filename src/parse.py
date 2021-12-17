@@ -1,10 +1,11 @@
+import os
 import json
 import re
 import string
-import pickle
 import pandas as pd
 from tqdm import tqdm
 from nltk.tokenize import word_tokenize
+from constants import PICKLE_DIR
 
 
 def contains_english_characters(sentence: str) -> bool:
@@ -41,14 +42,17 @@ def parse_json_file(file_name: str):
 
         # Check if message text contains english characters
         if contains_english_characters(message["text"]):
+            # Check if message contains keywords
             if contains_keywords(message["text"], ["shib", "doge"]):
                 parsed_messages.append(message["text"])
                 parsed_timestamps.append(message["date"])
 
-    df = pd.DataFrame(list(zip(parsed_timestamps, parsed_messages)), columns=[
-        "date", "message"])
+    df = pd.DataFrame(
+        list(zip(parsed_timestamps, parsed_messages)),
+        columns=["date", "message"]
+    )
     df["date"] = pd.to_datetime(df["date"])
-    df.to_pickle("parse.pkl")
+    df.to_pickle(os.path.join(PICKLE_DIR, "parse.pkl"))
 
 
 if __name__ == "__main__":
